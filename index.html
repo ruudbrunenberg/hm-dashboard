@@ -1,0 +1,1090 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Dashboard halve marathon training - doel 1:50</title>
+<style>
+  :root{
+    color-scheme: light;
+    --surface-0:#f5f4f1; --surface-1:#fcfcfb; --surface-2:#f0efec;
+    --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#77766f;
+    --grid:#e3e2dd; --border:#e0dfda; --baseline:#c3c2b7;
+    --series-1:#2a78d6;      /* hardlopen / gerealiseerd */
+    --series-2:#eb6834;      /* overig */
+    --series-3:#1baf7a;      /* padel */
+    --series-4:#8452c9;      /* voetbal */
+    --plan:#c8c7c0;          /* geplande doelbalk */
+    --band:#eb6834;
+    --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+    --good-ink:#006300; --warn-ink:#8a5a00; --crit-ink:#a52a2a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:where(:not([data-theme="light"])){
+      color-scheme: dark;
+      --surface-0:#111110; --surface-1:#1a1a19; --surface-2:#242423;
+      --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#9b9a90;
+      --grid:#333331; --border:#33332f; --baseline:#383835;
+      --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#a179e0;
+      --plan:#4a4a46;
+      --band:#d95926;
+      --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+      --good-ink:#0ca30c; --warn-ink:#fab219; --crit-ink:#e66767;
+    }
+  }
+  :root[data-theme="dark"]{
+      color-scheme: dark;
+      --surface-0:#111110; --surface-1:#1a1a19; --surface-2:#242423;
+      --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#9b9a90;
+      --grid:#333331; --border:#33332f; --baseline:#383835;
+      --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#a179e0;
+      --plan:#4a4a46;
+      --band:#d95926;
+      --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+      --good-ink:#0ca30c; --warn-ink:#fab219; --crit-ink:#e66767;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--surface-0);color:var(--text-primary);
+    font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:28px 20px 56px}
+  .wrap{max-width:1040px;margin:0 auto}
+  header{margin-bottom:22px}
+  .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+  h1{font-size:27px;line-height:1.2;margin:6px 0 6px;font-weight:650;letter-spacing:-.015em}
+  .sub{color:var(--text-secondary);font-size:14px;max-width:66ch}
+  .hero{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:18px 0}
+  .hero .n{font-size:46px;font-weight:650;letter-spacing:-.03em;line-height:1}
+  .hero .l{color:var(--text-secondary);font-size:14.5px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 22px}
+  .tiles-in{margin:0 0 4px}
+  .tiles-in .tile{background:var(--surface-2);border-color:transparent}
+  .tile .val .pr{font-size:11px;font-weight:600;color:var(--good-ink);letter-spacing:.03em;
+    display:block;margin-top:-2px}
+  .tile{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:13px 14px}
+  .tile .lab{font-size:11.5px;color:var(--text-muted);letter-spacing:.02em}
+  .tile .val{font-size:24px;font-weight:640;letter-spacing:-.02em;margin-top:3px}
+  .tile .note{font-size:11.5px;color:var(--text-secondary);margin-top:2px}
+  .card{background:var(--surface-1);border:1px solid var(--border);border-radius:12px;
+    padding:18px 18px 14px;margin-bottom:18px}
+  .card h2{font-size:16.5px;margin:0 0 3px;font-weight:625;letter-spacing:-.01em}
+  .card .cap{font-size:13px;color:var(--text-secondary);margin:0 0 14px;max-width:78ch}
+  .legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);
+    margin:2px 0 12px;align-items:center}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .swl{width:14px;height:2px;border-radius:1px;display:inline-block}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .gl{stroke:var(--grid);stroke-width:1}
+  .ax{fill:var(--text-muted);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .axb{fill:var(--text-secondary);font-size:11px;font-weight:600}
+  .dl{fill:var(--text-primary);font-size:10.5px;font-weight:640;font-variant-numeric:tabular-nums}
+  .ann{fill:var(--text-secondary);font-size:11px}
+
+  /* focus panel */
+  .focus{padding:0;overflow:hidden}
+  .focushead{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .focushead .wk{font-size:14px;color:var(--text-secondary)}
+  .focushead .wk strong{color:var(--text-primary);font-weight:650}
+  .focushead .phase{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:999px;
+    background:var(--surface-1);border:1px solid var(--border);font-size:12px;color:var(--text-secondary)}
+  .focushead .count{display:flex;align-items:center;gap:9px}
+  .focushead .count .n{font-size:32px;font-weight:650;letter-spacing:-.03em;line-height:1;
+    font-variant-numeric:tabular-nums}
+  .focushead .count .l{font-size:11.5px;color:var(--text-muted);line-height:1.35}
+  .focusgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:1px;background:var(--border)}
+  .fstat{background:var(--surface-1);padding:15px 18px 16px;display:flex;flex-direction:column;gap:2px}
+  .fstat .lab{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);
+    font-weight:600;display:flex;align-items:center;gap:7px}
+  .fstat .big{font-size:29px;font-weight:650;letter-spacing:-.025em;line-height:1.15;margin-top:4px;
+    font-variant-numeric:tabular-nums}
+  .fstat .big .u{font-size:16px;font-weight:600;color:var(--text-secondary);margin-left:2px}
+  .fstat .sub{font-size:12.5px;color:var(--text-secondary);margin-top:2px}
+  .meter{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:9px;
+    border:1px solid var(--border)}
+  .meter i{display:block;height:100%;border-radius:3px;background:var(--series-1)}
+  .cumProgress{margin:2px 0 16px}
+  .cumProgress .meter{margin-top:0;height:8px}
+  .cumProgress .meter i{background:linear-gradient(90deg,var(--series-1),color-mix(in srgb,var(--series-1) 75%,var(--good)))}
+  .cumRow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:7px;
+    font-size:12.5px;color:var(--text-secondary);flex-wrap:wrap}
+  .cumRow b{color:var(--text-primary);font-weight:650;font-size:13.5px}
+  .sigwrap{padding:14px 18px 15px;border-top:1px solid var(--border)}
+  .sighead{font-size:13px;font-weight:650;letter-spacing:.02em;color:var(--text-secondary);
+    margin-bottom:7px;display:flex;align-items:center;gap:7px}
+  .info{width:16px;height:16px;flex:0 0 auto;border-radius:50%;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text-muted);font:600 10.5px/1 system-ui,sans-serif;
+    cursor:help;display:inline-grid;place-items:center;padding:0;vertical-align:2px}
+  .info:hover,.info:focus-visible{color:var(--text-primary);border-color:var(--baseline);outline:none}
+  .card h2 .info{margin-left:8px}
+  /* inklapbare kaartkop */
+  .fold>summary.foldhead{cursor:pointer;list-style:none;outline:none;
+    font-size:16.5px;font-weight:625;letter-spacing:-.01em;color:var(--text-primary);
+    display:flex;align-items:center;gap:8px}
+  .fold>summary.foldhead::-webkit-details-marker{display:none}
+  .fold>summary.foldhead::before{content:"";width:7px;height:7px;flex:0 0 auto;
+    border-right:2px solid var(--text-muted);border-bottom:2px solid var(--text-muted);
+    transform:rotate(-45deg);transition:transform .15s;margin-right:2px}
+  .fold[open]>summary.foldhead::before{transform:rotate(45deg)}
+  .fold>summary.foldhead:focus-visible{text-decoration:underline}
+  .fold[open]>summary.foldhead{margin-bottom:12px}
+  /* log grouping */
+  tr.wkhead td{background:var(--surface-2);font-weight:640;color:var(--text-secondary);
+    font-size:12px;border-bottom:1px solid var(--border)}
+  tfoot td{font-weight:650;border-top:2px solid var(--baseline);border-bottom:none;
+    background:var(--surface-1)}
+  .kcal{color:var(--text-secondary)}
+  /* signals */
+  .sig{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--border)}
+  .sig:first-of-type{border-top:none;padding-top:2px}
+  .ico{flex:0 0 auto;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;
+    font-size:12px;font-weight:700;color:#fff;margin-top:1px}
+  .sig .txt{font-size:13.5px;line-height:1.5}
+  .sig .txt b{font-weight:640}
+  .sig .why{color:var(--text-secondary);font-size:12.5px;display:block;margin-top:1px}
+
+  /* filters */
+  .filters{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+  .fgroup{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .fgroup .flab{font-size:11.5px;color:var(--text-muted);letter-spacing:.02em;margin-right:2px}
+  .chip{font:inherit;font-size:12.5px;line-height:1;padding:6px 11px;border-radius:999px;
+    border:1px solid var(--border);background:var(--surface-2);color:var(--text-secondary);
+    cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .chip:hover{border-color:var(--baseline)}
+  .chip[aria-pressed="true"]{background:var(--text-primary);color:var(--surface-1);border-color:var(--text-primary)}
+  .chip[aria-pressed="true"] .sw{outline:1.5px solid var(--surface-1)}
+  .chip .cnt{font-variant-numeric:tabular-nums;opacity:.65}
+
+  .logwrap{margin-top:10px;border-top:1px solid var(--border);padding-top:9px}
+  .loghead{font-size:12.5px;color:var(--text-secondary)}
+  .logwrap:not(.open) tbody tr.hid{display:none}
+  .more{margin-top:10px}
+  details{margin-top:10px;border-top:1px solid var(--border);padding-top:9px}
+  summary{cursor:pointer;font-size:12.5px;color:var(--text-secondary);outline:none}
+  table{border-collapse:collapse;font-size:12.5px;margin-top:9px;width:100%}
+  th,td{text-align:right;padding:5px 9px;border-bottom:1px solid var(--border);
+    font-variant-numeric:tabular-nums;vertical-align:top}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--text-muted);font-weight:600;white-space:nowrap}
+  td.l,th.l{text-align:left}
+  .wk-row{cursor:pointer}
+  .wk-row:hover td{background:var(--surface-2)}
+  tr.now td{background:color-mix(in srgb, var(--series-1) 9%, transparent)}
+  tr.now td:first-child{font-weight:650}
+  .det td{background:var(--surface-2);font-size:12px}
+  .det table{margin:2px 0 4px}
+  .det th,.det td{border-bottom:1px solid var(--border);background:transparent}
+  .tag{display:inline-block;padding:1px 7px;border-radius:999px;font-size:11px;
+    border:1px solid var(--border);color:var(--text-secondary);white-space:nowrap}
+  .tag.ok{color:var(--good-ink);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
+  .tag.warn{color:var(--warn-ink);border-color:color-mix(in srgb,var(--warning) 55%,transparent)}
+  .tag.bad{color:var(--crit-ink);border-color:color-mix(in srgb,var(--critical) 45%,transparent)}
+  .muted{color:var(--text-muted)}
+  .tt{position:fixed;pointer-events:none;opacity:0;transition:opacity .09s;max-width:min(430px,88vw);
+    background:var(--surface-1);border:1px solid var(--border);border-radius:8px;
+    padding:7px 10px;font-size:12.5px;box-shadow:0 4px 16px rgba(0,0,0,.13);z-index:9;
+    font-variant-numeric:tabular-nums;line-height:1.5}
+  .tt b{font-weight:640}
+  footer{color:var(--text-muted);font-size:12px;margin-top:26px;line-height:1.7}
+  .scroll{overflow-x:auto}
+  @media (max-width:640px){ .hero .n{font-size:38px} body{padding:20px 12px 40px} }
+</style>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Stuurdashboard · schema v6.1 · bijgewerkt t/m <span id="asOf">—</span></div>
+  <h1>Halve Marathon van Ell — doel 1:50:00</h1>
+</header>
+
+<!-- ============ 1. DEZE WEEK + BIJSTUREN ============ -->
+<div class="card focus">
+  <div class="focushead">
+    <div class="wk">Week <strong id="weekno">—</strong> van 14 <span class="phase" id="phase">—</span></div>
+    <div class="count"><span class="n" id="days">—</span><span class="l">dagen tot Ell<br>zo 22 nov 2026</span></div>
+  </div>
+  <div class="focusgrid" id="focus"></div>
+  <div class="sigwrap">
+    <div class="sighead">Bijsturen<button class="info" type="button" data-tip="Automatisch afgeleid uit de harde schemaregels (v6.1):<br>· minimaal 68 % van de looptijd rustig<br>· de woensdag vervalt nooit<br>· max +3 km weektotaal en +2 km lange duurloop per opbouwweek<br>Herberekend zodra Strava nieuwe data levert.">i</button></div>
+    <div id="signals"></div>
+  </div>
+</div>
+
+<!-- ============ 2. PLAN VS REALISATIE ============ -->
+<div class="card">
+  <h2>Weekvolume<button class="info" type="button" data-tip="Grijs is het geplande weektotaal, blauw wat er gelopen is.<br>De oranje lijn is de geplande lange duurloop van de woensdag —<br>de sessie die nooit vervalt.<br><br>De balk erboven is de voortgang over het hele schema: gelopen<br>kilometers tot nu toe tegen het totaal van 348 km over 14 weken.">i</button></h2>
+  <div class="cumProgress">
+    <div class="meter"><i id="c1meterbar" style="width:0%"></i></div>
+    <div class="cumRow">
+      <span><b id="c1done">—</b> km gelopen <span id="c1pct"></span></span>
+      <span>nog <b id="c1remain">—</b> km gepland <span id="c1fromwk"></span></span>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--plan)"></i>Gepland</span>
+    <span><i class="sw" style="background:var(--series-1)"></i>Gerealiseerd</span>
+    <span><i class="swl" style="background:var(--band)"></i>Lange duurloop</span>
+  </div>
+  <svg id="c1" viewBox="0 0 980 292" role="img" aria-label="Gepland versus gerealiseerd weekvolume per trainingsweek"></svg>
+</div>
+
+<!-- ============ 3. SCHEMA PER WEEK ============ -->
+<div class="card">
+  <h2>Schema per week<button class="info" type="button" data-tip="Klik een week open voor de losse sessies:<br>geplande afstand en tempo naast wat Strava terugmeldt,<br>met een oordeel per sessie.">i</button></h2>
+  <div class="scroll">
+  <table id="wkTable">
+    <thead><tr>
+      <th class="l">Wk</th><th class="l">Periode</th><th>Gepland</th><th>Gelopen</th><th>Δ vs plan</th>
+      <th>Lange duurloop</th><th>Rustig-aandeel</th><th class="l">Fase</th>
+    </tr></thead>
+    <tbody id="wkBody"></tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ============ 4. ACTIVITEITEN + FILTERS ============ -->
+<div class="card">
+  <h2>Alle activiteiten<button class="info" type="button" data-tip="De grafiek toont uren per week per activiteitstype — belasting,<br>niet alleen kilometers: padel en voetbal leveren wel belasting<br>maar nauwelijks of geen afstand.<br><br>Voetbal heeft geen GPS-afstand in Strava; de duur en calorieën<br>tellen wel mee. Totalen onderin volgen het actieve filter.">i</button></h2>
+  <div class="filters">
+    <div class="fgroup" id="fType"><span class="flab">TYPE</span></div>
+    <div class="fgroup" id="fPer"><span class="flab">PERIODE</span></div>
+  </div>
+  <div class="legend" id="mixLegend"></div>
+  <svg id="c3" viewBox="0 0 980 254" role="img" aria-label="Uren per week per activiteitstype"></svg>
+  <div class="logwrap" id="logWrap">
+    <div class="scroll"><div id="logTable"></div></div>
+    <button class="chip more" id="logMore" type="button" hidden></button>
+  </div>
+</div>
+
+<!-- ============ 5. INTENSITEIT ============ -->
+<div class="card">
+  <h2>Intensiteit<button class="info" type="button" data-tip="Elke stip is één loop op gemiddeld tempo, beoordeeld tegen de band<br>van de sessie die die week gepland stond — niet tegen een vaste grens.<br>Een woensdag met blokken hoort gemiddeld ónder de rustige band te liggen.<br><br>Banden (v6.0): rustig 6:00–6:50 (min. 68 % van de looptijd),<br>wedstrijdtempo 5:10–5:16 (max. 32 %, wo + vr), scherpte 4:33–4:42 (wk 5/7/9).<br>De rood gearceerde zone 5:20–5:45 komt in dit schema niet voor.">i</button></h2>
+  <div class="filters">
+    <div class="fgroup" id="fPerInt"><span class="flab">PERIODE</span></div>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--good)"></i>Binnen de band van die sessie</span>
+    <span><i class="sw" style="background:var(--critical)"></i>Te hard voor die sessie</span>
+    <span><i class="sw" style="background:var(--plan)"></i>Te zacht / geen geplande sessie</span>
+  </div>
+  <svg id="c2" viewBox="0 0 980 298" role="img" aria-label="Gemiddeld tempo per loop tegen de rustige band"></svg>
+</div>
+
+<!-- ============ 6. RECORDS ============ -->
+<div class="card">
+  <h2>Records<button class="info" type="button" data-tip="Het doel van 1:50:00 vraagt 4 seconden per kilometer sneller<br>dan je halve-marathon-PR — geen sprong, maar wel over 21,1 km<br>vol te houden.">i</button></h2>
+  <div class="tiles tiles-in" id="prTiles"></div>
+  <details><summary>Alle wedstrijden en tijdritten uit Strava</summary>
+    <div class="scroll"><div id="prTable"></div></div>
+  </details>
+</div>
+
+<!-- ============ 7. NULMETING ============ -->
+<div class="card">
+  <details class="fold">
+    <summary class="foldhead">Nulmeting<button class="info" type="button" data-tip="Hardloopkilometers per week over de twaalf maanden vóór dit schema.<br>Van gemiddeld 14,4 km per week in het najaar van 2025 naar 6,8 km<br>in de laatste vier weken — de reden dat het schema begint op 19 km<br>en niet op 26.">i</button></summary>
+  <svg id="c4" viewBox="0 0 980 252" role="img" aria-label="Hardloopkilometers per week, augustus 2025 tot augustus 2026"></svg>
+  </details>
+</div>
+
+</div>
+
+<div class="tt" id="tt"></div>
+
+<script type="text/plain" id="app">
+/* ══════════════ helpers ══════════════ */
+const S=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const NS='http://www.w3.org/2000/svg';
+const el=(n,a={})=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const tt=document.getElementById('tt');
+function hov(node,html){
+  node.style.cursor='default';
+  node.addEventListener('pointerenter',ev=>{tt.innerHTML=html;tt.style.opacity=1;mv(ev);});
+  node.addEventListener('pointermove',mv);
+  node.addEventListener('pointerleave',()=>tt.style.opacity=0);
+}
+function mv(ev){const p=12;let x=ev.clientX+p,y=ev.clientY-p-tt.offsetHeight;
+  if(x+tt.offsetWidth>innerWidth-8)x=ev.clientX-p-tt.offsetWidth;
+  if(y<8)y=ev.clientY+p;tt.style.left=x+'px';tt.style.top=y+'px';}
+const mmss=s=>{const r=Math.round(s);return Math.floor(r/60)+':'+String(r%60).padStart(2,'0');};
+const nl=(n,d=1)=>Number(n).toLocaleString('nl-NL',{maximumFractionDigits:d,minimumFractionDigits:0});
+const MND=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+const DAG=['zo','ma','di','wo','do','vr','za'];
+const dlab=s=>{const[y,m,d]=s.split('-');return +d+' '+MND[+m-1]};
+const D=s=>new Date(s+'T12:00:00');
+const iso=d=>d.toISOString().slice(0,10);
+const addD=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return iso(d)};
+const TODAY=iso(new Date());
+
+/* ══════════════ data: Strava ══════════════
+   [datum, type, meters, moving_s, elapsed_s]   R=hardlopen P=padel F=voetbal B=fiets S=ski W=wandelen
+   O=overig/onduidelijk (activiteiten die bij geen enkele geplande sessie passen)
+   Voetbal heeft normaliter geen Strava-afstand (geen GPS-opname); meters staat dan op 0. */
+const ACT=DATA.act.map(([d,t,m,mv,ev,c])=>({d,t,km:m/1000,s:mv,es:ev,cal:c,pace:t==='R'&&m>500?mv/(m/1000):null,wd:D(d).getDay()}));
+
+const TYPES={R:{lab:'Hardlopen',c:'--series-1'},P:{lab:'Padel',c:'--series-3'},
+             F:{lab:'Voetbal',c:'--series-4'},O:{lab:'Overig',c:'--series-2'}};
+const grp=t=>t==='R'?'R':t==='P'?'P':t==='F'?'F':'O';
+
+/* ══════════════ data: schema v6.0 (18-08-2026, avond) + v6.1 (30-08-2026, avond) ══════════════
+   tgt = bandbreedte gemiddeld tempo in sec/km voor die sessie (blended gemiddelde over de hele
+         sessie inclusief in-/uitlopen — voor scherptesessies wordt de IP-band zelf gebruikt, zoals
+         al in v5.1)
+   rp  = totaal geplande kilometers op wedstrijdtempo 5:10–5:16 in die week (woensdag + vrijdag)
+   ip  = geplande kilometers op de scherptesessie 4:33–4:42 op de woensdag (vervangt het
+         wedstrijdtempoblok van de woensdag, komt er nooit bovenop) — sinds v6.0 in week 5, 7 en 9,
+         en voorwaardelijk week 10 bij een zwakke week 8-test. De vrijdag van die week houdt gewoon
+         zijn eigen (kleinere) wedstrijdtempoblok.
+   HARDKM = per week en per dag hoeveel km van díe sessie daadwerkelijk kwaliteit is (het ingebouwde
+            blok, niet de hele sessie-afstand) — gebruikt voor de zware-tijd-berekening hieronder, zodat
+            een blokkensessie niet in zijn geheel als zwaar telt.
+   Sinds v6.0 (18-08-2026): vrijdag is een tweede kwaliteitsmoment naast de lange duurloop (behalve
+   in week 11 en 12), het kwaliteitsplafond is 32 % (was 20 %), en er is geen aparte herstel-pace meer
+   — alles wat geen kwaliteit is, is minimaal rustig. Zie claude/03-trainingsschema.md en
+   claude/05-evaluaties.md, sectie "Schemaherziening v6.0".
+   Sinds v6.1 (30-08-2026, avond): de lange duurloop staat officieel op WOENSDAG in plaats van
+   dinsdag (dagcode "wo" i.p.v. "di" in elke sessie hieronder, en in HARDKM) — formalisering van het
+   feitelijke basispatroon sinds week 1, geen inhoudelijke wijziging. Zie claude/05-evaluaties.md,
+   sectie "Schemaherziening v6.1". */
+const RUSTIG=[360,410];
+const WT=[310,316];                 // wedstrijdtempo 5:10–5:16
+const IP=[273,282];                 // scherptesessie / interval 4:33–4:42 (week 5, 7, 9, evt. 10)
+const GRIJS=[320,345];              // grijze zone 5:20–5:45 — komt niet voor
+const PLAN=DATA.plan;
+/* Hoeveel km van de sessie op díe dag daadwerkelijk kwaliteit is (het ingebouwde blok) —
+   gebruikt in de zware-tijd-berekening. Niet aanwezig = die dag is die week volledig rustig. */
+const HARDKM=DATA.hardkm;
+/* weken waarin het kwaliteitsplafond van 32 % (sinds v6.0, was 20 %) niet als schending geldt:
+   herstel/test (8), wedstrijdsimulatie (12, voorzichtigheidsmarge) en race (14). De scherptesessie-
+   weken (5, 7, 9) tellen hun zware tijd via een lager gemiddeld tempo (interval i.p.v. wedstrijd-
+   tempo) en blijven voorzichtigheidshalve ook vrijgesteld. Piekweek (11, ~30 %) hoort onder het
+   plafond te blijven en is dus NIET vrijgesteld — een overschrijding daar is een echt signaal. */
+const RP_VRIJ=new Set([5,9,10,12,14]);
+/* ── door Ruud bevestigde afwijkingen ──────────────────────────────────────────
+   KOPPEL: een gelopen activiteit hoort bij een andere sessie dan die van dezelfde
+           kalenderdag. Datum -> dagcode van de geplande sessie. Alleen invullen
+           wat Ruud expliciet heeft bevestigd; nooit zelf invullen bij twijfel.
+   VERZET: een geplande sessie is binnen de week naar een andere dag geschoven.
+           "week:dagcode" -> nieuwe datum. Voorkomt dat de sessie als gemist telt
+           voordat de nieuwe dag verstreken is.
+   EIGEN:  een gelopen activiteit die Ruud expliciet als eigen weekopgave heeft
+           bevestigd (los van een PLAN-sessie) — telt mee in het weekvolume maar
+           koppelt aan geen enkele geplande sessie.                                 */
+const KOPPEL=DATA.koppel;   /* 09-09 bevestigd als de woensdag van week 4; 22-08-2026 volgt uit de volgorderegel zelf */
+const VERZET=DATA.verzet;
+const EIGEN=DATA.eigen;   /* bevestigd: maandag 7 km, Ruuds eigen weekopgave in week 4 — niet de vrijdagsessie */
+
+const WDI={ma:1,di:2,wo:3,do:4,vr:5,za:6,zo:0};
+PLAN.forEach(w=>{w.sun=addD(w.mon,6); w.ses.forEach(s=>{
+  const d=addD(w.mon,(WDI[s[0]]+6)%7);
+  s.push(d);                                  // s[5] = oorspronkelijk geplande dag
+  s.due=VERZET[w.n+':'+s[0]]||d;              // s.due = dag waarop hij daadwerkelijk staat
+});});
+
+/* ── koppel Strava-activiteiten aan weken en sessies ──
+   Ruud plant week voor week, niet dag voor dag: een sessie kan een dag eerder of later
+   vallen dan gepland, zonder dat dat een gemiste sessie is. Matchen gebeurt daarom in twee
+   stappen: (1) exacte dag, (2) binnen de resterende activiteiten/sessies van diezelfde week
+   op kilometers — de sessies in één week verschillen meestal duidelijk in afstand (lange
+   duurloop vs. rustige loop vs. herstel), dus dat is een betrouwbaardere sleutel dan de dag.
+   Is er geen eenduidige beste match (twee sessies even dichtbij, of meer activiteiten dan
+   openstaande sessies), dan wordt er NIET gegokt: de week krijgt w.ambiguous en de coach
+   moet dat navragen bij Ruud voordat het logboek of dashboard verder wordt bijgewerkt. */
+const runsIn=(a,b)=>ACT.filter(x=>x.t==='R'&&x.d>=a&&x.d<=b&&x.km>=0.6);
+function matchWeek(w){
+  w.ambiguous=[];
+  const claimed=new Set();
+  w.ses.forEach(s=>{s[6]=[]; s.moved=false; s.confirmed=false;});
+
+  // stap 0: door Ruud bevestigde koppeling (KOPPEL) — gaat vóór de volgorderegel
+  w.acts.forEach(a=>{
+    const dag=KOPPEL[a.d]; if(!dag) return;
+    const ses=w.ses.find(x=>x[0]===dag); if(!ses) return;
+    ses[6].push(a); ses.moved=(a.d!==ses[5]); ses.confirmed=true;
+    a.matchedSession=ses; claimed.add(a);
+  });
+
+  /* stap 1: SEQUENTIEEL — de kernregel (opgave Ruud, 22-08-2026).
+     Ruud werkt de sessies van een week van boven naar beneden af. Haalt hij een
+     geplande loop niet op de geplande dag, dan vervalt die niet: de planning schuift
+     gewoon door. De n-de loop van de week hoort dus bij de n-de nog openstaande
+     sessie — NIET bij de sessie die toevallig op diezelfde kalenderdag stond.
+     Dat is precies het geval van 22-08-2026: op zaterdag gelopen, maar het was de
+     vrijdagsessie, omdat vrijdag nog openstond.
+     Sanity check: wijkt de afstand meer dan 60 % af van de sessie waar de volgorde
+     hem neerlegt, dan is de volgorde-aanname vermoedelijk gebroken (bijvoorbeeld een
+     extra, ongeplande loop ertussen). Dan wordt er NIET gegokt maar nagevraagd. */
+  const openSes=w.ses.filter(s=>!s[6].length)
+    .sort((x,y)=>x.due<y.due?-1:x.due>y.due?1:0);
+  const openActs=w.acts.filter(a=>!claimed.has(a)&&!EIGEN.includes(a.d))
+    .sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:0);
+  openActs.forEach((a,i)=>{
+    const ses=openSes[i];
+    if(!ses) return;                                   // meer lopen dan sessies: extra loop
+    const rel=Math.abs(ses[1]-a.km)/Math.max(ses[1],a.km,1);
+    if(rel>0.6){
+      w.ambiguous.push({act:a,candidates:openSes.slice(i)});
+      return;
+    }
+    ses[6]=[a]; ses.moved=(a.d!==ses[5]);
+    a.matchedSession=ses; claimed.add(a);
+  });
+}
+PLAN.forEach(w=>{
+  w.acts=runsIn(w.mon,w.sun);
+  w.done=w.acts.reduce((s,a)=>s+a.km,0);
+  w.longest=w.acts.reduce((m,a)=>Math.max(m,a.km),0);
+  w.started=TODAY>=w.mon;
+  w.closed=TODAY>w.sun;
+  w.planToDate=w.closed? w.km : w.ses.filter(s=>s.due<TODAY).reduce((s,x)=>s+x[1],0);
+  matchWeek(w);
+  /* rustig-aandeel op looptijd — sinds v6.0: een blokkensessie is NIET in zijn geheel zwaar, en dat
+     geldt nu voor ZOWEL de woensdag als de vrijdag (twee kwaliteitsmomenten per week). Alleen de
+     kilometers uit HARDKM tellen als zware tijd per sessie; de rest van die loop is inlopen en
+     uitlopen en dus rustig. De koppeling komt uit matchWeek() (week-breed), niet uit een
+     exacte-dagvergelijking. */
+  const tot=w.acts.reduce((s,a)=>s+a.s,0);
+  const hk=HARDKM[w.n]||{};
+  let hard=0;
+  w.acts.forEach(a=>{
+    const s=a.matchedSession;
+    if(s&&(w.n===8||w.n===14)){ hard+=a.s; return; }                  // test of wedstrijd: volledig zwaar
+    if(s&&hk[s[0]]){                                                  // woensdag- of vrijdagblok deze week
+      const paceAvg=(s[3][0]===IP[0]&&s[3][1]===IP[1])?277.5:313;                            // scherpte vs. wedstrijdtempo
+      hard+=Math.min(hk[s[0]]*paceAvg,a.s);
+      return;
+    }
+    if(a.pace<360) hard+=a.s;                                        // rustig gepland, te hard gelopen
+  });
+  w.easyPct=tot?(tot-hard)/tot*100:null;
+  w.hardPct=tot?hard/tot*100:null;
+});
+const CUR=PLAN.find(w=>TODAY>=w.mon&&TODAY<=w.sun)||PLAN[0];
+const RACE="2026-11-22";
+const PLANTOT=PLAN.reduce((s,w)=>s+w.km,0);
+const DONETOT=PLAN.reduce((s,w)=>s+w.done,0);
+
+/* ══════════════ kop + focusstats ══════════════ */
+const daysLeft=Math.round((D(RACE)-D(TODAY))/864e5);
+document.getElementById('days').textContent=daysLeft;
+document.getElementById('weekno').textContent=CUR.n;
+document.getElementById('phase').textContent=CUR.fase;
+
+const lastAct=ACT[ACT.length-1];
+const daysSince=Math.round((D(TODAY)-D(lastAct.d))/864e5);
+document.getElementById('asOf').textContent=dlab(lastAct.d)+' '+lastAct.d.slice(0,4);
+const planToDate=CUR.ses.filter(s=>s.due<TODAY).reduce((s,x)=>s+x[1],0);
+
+/* eerstvolgende nog niet gelopen sessie, chronologisch over alle weken heen */
+const NEXT=(()=>{
+  const all=[];
+  PLAN.forEach(w=>w.ses.forEach(x=>all.push({w,s:x,date:x.due,got:x[6]&&x[6].length>0})));
+  all.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  return all.find(o=>o.date>=TODAY&&!o.got) || all.filter(o=>!o.got).pop() || null;
+})();
+
+(function(){
+  const pct = CUR.km>0 ? Math.min(100, CUR.done/CUR.km*100) : 0;
+  const rest = Math.max(0, CUR.km-CUR.done);
+  const dlt = CUR.done - planToDate;                 // t.o.v. wat al gelopen hád moeten zijn
+  const dtxt = Math.abs(dlt)<0.05 ? 'op plan'
+    : (dlt>0?'+':'') + nl(dlt) + ' km t.o.v. plan';
+  const dcls = Math.abs(dlt)<=1.5?'ok':dlt<0?'bad':'warn';
+
+  let nx;
+  if(NEXT){
+    const [d,km,lab,tgt,note]=NEXT.s, date=NEXT.s.due;
+    const dd=D(date), rel=Math.round((dd-D(TODAY))/864e5);
+    const when = rel===0?'vandaag':rel===1?'morgen':rel<0?dlab(date):DAG[dd.getDay()]+' '+dlab(date);
+    nx=`<div class="lab">Volgende sessie</div>
+        <div class="big" style="font-size:22px">${lab}</div>
+        <div class="sub">${when} · ${nl(km)} km · ${mmss(tgt[0])}–${mmss(tgt[1])}/km</div>`;
+    if(note) nx=nx.replace('Volgende sessie','Volgende sessie<button class="info" type="button" data-tip="'
+      +note.replace(/"/g,'&quot;')+'">i</button>');
+  } else {
+    nx=`<div class="lab">Volgende sessie</div><div class="big" style="font-size:22px">—</div>
+        <div class="sub">schema afgerond</div>`;
+  }
+
+  document.getElementById('focus').innerHTML=`
+    <div class="fstat">
+      <div class="lab">Gepland deze week</div>
+      <div class="big">${nl(CUR.km)}<span class="u">km</span></div>
+      <div class="sub">${CUR.ses.length} sessies · lange duurloop ${nl(CUR.lr)} km</div>
+    </div>
+    <div class="fstat">
+      <div class="lab">Gerealiseerd</div>
+      <div class="big">${nl(CUR.done)}<span class="u">km</span></div>
+      <div class="sub">${Math.round(pct)} % van de week · nog ${nl(rest)} km <span class="tag ${dcls}">${dtxt}</span></div>
+      <div class="meter" title="${nl(CUR.done)} van ${nl(CUR.km)} km gepland deze week — tot en met gisteren stond er ${nl(planToDate)} km gepland"><i style="width:${pct}%"></i></div>
+    </div>
+    <div class="fstat">${nx}</div>`;
+})();
+
+/* ══════════════ 1. bijstuursignalen ══════════════ */
+(function(){
+  const out=[];
+  const push=(lvl,t,why)=>out.push({lvl,t,why});
+  const prev=PLAN.filter(w=>w.closed);
+  const last=prev[prev.length-1];
+
+  // A. inactiviteit
+  if(daysSince>=10)
+    push('critical','Je hebt '+daysSince+' dagen niet gelopen.',
+      'Laatste activiteit: '+dlab(lastAct.d)+'. Week 1 begint vanaf nul. Loop de woensdag van 10 km '
+      +'niet sneller dan 6:05 — na drie weken stilstand is het risico een blessure, niet een te trage loop.');
+  else if(daysSince>=5)
+    push('warning',daysSince+' dagen zonder activiteit.','Laatste: '+dlab(lastAct.d)+'.');
+
+  // B. lopende week
+  if(CUR.started){
+    const wo=CUR.ses.find(s=>s[0]==='wo');
+    if(wo&&wo[6].length>0){
+      const gd=wo[6][0].d;
+      push('good','Kernsessie van deze week is gelopen: '+nl(wo[6].reduce((s,a)=>s+a.km,0))+' km'+(wo.moved?' op '+DAG[D(gd).getDay()]+' '+dlab(gd)+' — verzet binnen de week':'')+'.',
+        wo.moved?'Gepland stond '+dlab(wo[5])+'. De lange duurloop vervalt nooit maar mag binnen de week schuiven.':'');
+    } else if(wo&&wo.due<TODAY)
+      push('critical','De lange duurloop van woensdag is niet gelopen.',
+        'Dat is de enige sessie in dit schema die niet mag vervallen. Verzet hem naar donderdag en laat zaterdag vallen.');
+    else if(wo)
+      push('info','Kernsessie deze week: '+dlab(wo.due)+' — '+nl(wo[1])+' km '+wo[2].toLowerCase()+'.',
+        'Doeltempo '+mmss(wo[3][0])+'–'+mmss(wo[3][1])+'/km'+(wo[4]?' — '+wo[4]:'')+'. Deze sessie vervalt nooit, maar mag wel eerder of later in de week.');
+    if(CUR.done>0&&CUR.done<planToDate*0.8)
+      push('warning','Achterstand binnen de week: '+nl(CUR.done)+' km gelopen, '+nl(planToDate)+' km gepland tot vandaag.','');
+
+    /* te hard gelopen BINNEN de lopende week — niet pas bij de weekafsluiting.
+       Dit is de meest voorkomende fout in dit schema en moet dezelfde dag zichtbaar zijn. */
+    CUR.acts.forEach(a=>{
+      const ses=a.matchedSession; if(!ses||!a.pace) return;
+      if(a.pace < ses[3][0]-8)
+        push('warning','Te hard: '+dlab(a.d)+' op '+mmss(a.pace)+'/km, gepland '+mmss(ses[3][0])+'–'+mmss(ses[3][1])+' ('+ses[2].toLowerCase()+').',
+          'Rustig gepland en te snel gelopen is in dit schema een fout, geen meevaller — ook als het goed voelde. '
+          +'Zonder aparte herstel-pace sinds v6.0 is de rustige band het enige vangnet; zet het tempo-alarm op 6:00.');
+    });
+
+    /* rustig-aandeel van de lopende week, zodra er genoeg looptijd is om iets te zeggen */
+    if(CUR.easyPct!==null&&CUR.done>=5&&CUR.easyPct<68)
+      push('warning','Rustig-aandeel deze week: '+nl(CUR.easyPct,1)+' % van de looptijd (ondergrens 68 %).',
+        'Blokken en scherptesessies zijn hier al apart geboekt — dit gaat dus over de rustige dagen.');
+
+    /* gemiste sessie binnen de lopende week (de woensdag heeft hierboven zijn eigen, zwaardere regel) */
+    CUR.ses.filter(x=>x[0]!=='wo'&&x.due<TODAY&&(!x[6]||!x[6].length)).forEach(x=>{
+      push('info','Niet gelopen: '+x[2].toLowerCase()+' van '+DAG[D(x.due).getDay()]+' '+dlab(x.due)+' ('+nl(x[1])+' km).',
+        'Een gemiste sessie wordt niet ingehaald — alleen de woensdag schuift. Ga verder met het schema.');
+    });
+  }
+
+  // B2. onduidelijke koppeling — niet gokken, navragen bij Ruud
+  PLAN.filter(w=>w.started&&w.ambiguous.length).forEach(w=>{
+    w.ambiguous.forEach(am=>{
+      push('warning','Onduidelijke koppeling in week '+w.n+': activiteit van '+dlab(am.act.d)+' ('+nl(am.act.km)+' km) past niet eenduidig bij één sessie.',
+        'Kandidaten: '+am.candidates.map(s=>s[2].toLowerCase()+' ('+nl(s[1])+' km, gepland '+dlab(s[5])+')').join(', ')+
+        '. Vraag Ruud welke sessie hij bedoelde voordat het logboek of dit dashboard verder wordt bijgewerkt.');
+    });
+  });
+
+  // C. afgelopen weken
+  if(last){
+    const pct=last.done/last.km*100;
+    if(pct<85) push('critical','Week '+last.n+' kwam op '+Math.round(pct)+' % van het geplande volume ('+nl(last.done)+' van '+last.km+' km).',
+      'Onder de 85 % twee weken op rij: terug naar het volume van twee weken eerder en één week consolideren.');
+    else if(pct>112) push('warning','Week '+last.n+' zat '+Math.round(pct-100)+' % boven plan.',
+      'De opbouwstap is +3 km per opbouwweek, niet meer. Extra kilometers zijn geen bonus — met wedstrijdtempo in het schema is de rekening voor bindweefsel dubbel.');
+    if(last.easyPct!==null&&last.easyPct<68)
+      push('critical','Week '+last.n+': maar '+nl(last.easyPct,1)+' % van de looptijd was rustig.',
+        'De ondergrens is 68 % (sinds v6.0), en de blokken zijn hier al apart geboekt — dit gaat dus over de rustige dagen. Zet het tempo-alarm op 6:00 op de Venu 2. Zonder herstel-pace als vangnet is dit signaal belangrijker dan voorheen.');
+    if(last.hardPct!==null&&last.hardPct>32&&!RP_VRIJ.has(last.n))
+      push('warning','Week '+last.n+': '+Math.round(last.hardPct)+' % van de looptijd was zwaar (plafond 32 % sinds v6.0).',
+        'Wedstrijdtempo is een plafond, geen streven. Was de donderdag- of vrijdagvariant gelopen (groter vrijdagblok dan standaard), dan ligt het aandeel vanzelf wat hoger; zonder die reden is dit te veel en gaat er een kilometer af.');
+    if(last.longest<last.lr*0.85)
+      push('warning','De lange duurloop van week '+last.n+' bleef op '+nl(last.longest)+' km steken (gepland '+nl(last.lr)+' km).','');
+    const p2=prev[prev.length-2];
+    if(p2&&p2.done>0&&last.done-p2.done>4&&!RP_VRIJ.has(last.n)&&last.n!==5&&last.n!==9)
+      push('warning','Volumesprong van '+nl(p2.done)+' naar '+nl(last.done)+' km (+'+nl(last.done-p2.done)+' km).',
+        'Maximum is +3 km op het weektotaal en +2 km op de lange duurloop per opbouwweek.');
+  }
+  // C2. donderdagregel — hangt aan een gegeven dat niet in Strava staat
+  const VR_KWALITEIT=new Set([3,5,6,7,9,10]);   // weken met een vast vrijdagblok sinds v6.0
+  if(CUR.started&&VR_KWALITEIT.has(CUR.n)){
+    const dow=D(TODAY).getDay();
+    if(dow===5||dow===4)
+      push('info','Donderdagregel: was de voetbaltraining zwaar of licht?',
+        'Kon je hele zinnen praten en stond je veel stil, dan was hij licht en wordt het vrijdagblok groter: '
+        +'2 km in + 4× 3 min op 5:10–5:16 met 2 min dribbel + 2 km uit. Viel de training uit: 5× 4 min, op donderdag zelf, '
+        +'en dan blijft vrijdag rustig. Geen opgave = uitgaan van zwaar, dus het standaard (kleinere) vrijdagblok van deze week. '
+        +'Leg het vast in het voetbalregister in claude/04-logboek.md.');
+  }
+
+  // D. vooruitblik
+  const nxt=PLAN.find(w=>w.mon>TODAY);
+  if(nxt&&out.filter(o=>o.lvl!=='info').length<3)
+    push('info','Volgende week ('+nxt.n+'): '+nxt.km+' km, lange duurloop '+nl(nxt.lr)+' km — '+nxt.fase.toLowerCase()+'.','');
+  if(!out.some(o=>o.lvl==='critical'||o.lvl==='warning'))
+    out.unshift({lvl:'good',t:'Geen afwijking van het schema.',why:'Volume, lange duurloop en intensiteit liggen alle drie binnen de marge.'});
+
+  const ICO={good:['✓','--good'],warning:['!','--warning'],serious:['!','--serious'],
+             critical:['!','--critical'],info:['i','--plan']};
+  const LBL={good:'Op koers',warning:'Let op',serious:'Let op',critical:'Bijsturen',info:'Vooruit'};
+  document.getElementById('signals').innerHTML=out.map(o=>{
+    const[ch,cv]=ICO[o.lvl];
+    return `<div class="sig"><span class="ico" style="background:var(${cv});${o.lvl==='info'?'color:var(--text-primary)':''}">${ch}</span>
+      <span class="txt"><b>${LBL[o.lvl]} · </b>${o.t}${o.why?`<span class="why">${o.why}</span>`:''}</span></div>`;
+  }).join('');
+})();
+
+/* ══════════════ 2. gepland vs gerealiseerd ══════════════ */
+(function(){
+  const svg=document.getElementById('c1'),W=980,H=292,L=44,R=14,T=26,B=56;
+  const iw=W-L-R, ih=H-T-B, n=PLAN.length, band=iw/n;
+
+  // cumulatief gelopen (alle weken tot nu) en cumulatief nog gepland (vanaf de huidige week)
+  const REMAINPLAN=PLAN.filter(w=>w.n>=CUR.n).reduce((s,w)=>s+w.km,0);
+  const cumPct=PLANTOT>0?Math.min(100,DONETOT/PLANTOT*100):0;
+  document.getElementById('c1meterbar').style.width=cumPct+'%';
+  document.getElementById('c1done').textContent=nl(DONETOT);
+  document.getElementById('c1pct').textContent='van '+nl(PLANTOT)+' km ('+Math.round(cumPct)+' %)';
+  document.getElementById('c1remain').textContent=nl(REMAINPLAN);
+  document.getElementById('c1fromwk').textContent='vanaf week '+CUR.n;
+
+  const bw=Math.min(30,band-16);           // brede doelbalk
+  const bwA=bw*0.56;                       // smallere realisatiebalk ervoor
+  const max=40, y=v=>T+ih-(v/max)*ih;
+  [0,10,20,30,40].forEach(v=>{
+    svg.appendChild(el('line',{class:'gl',x1:L,x2:W-R,y1:y(v),y2:y(v)}));
+    const t=el('text',{class:'ax',x:L-8,y:y(v)+3.5,'text-anchor':'end'});t.textContent=v;svg.appendChild(t);
+  });
+  const kl=el('text',{class:'ax',x:L,y:T-8,'text-anchor':'start'});kl.textContent='km';svg.appendChild(kl);
+
+  PLAN.forEach((w,i)=>{
+    const cx=L+band*i+band/2;
+    const g=el('g',{});
+    g.appendChild(el('rect',{x:cx-bw/2,y:y(w.km),width:bw,height:ih-(y(w.km)-T),rx:4,fill:S('--plan')}));
+    if(w.done>0){
+      g.appendChild(el('rect',{x:cx-bwA/2-1,y:y(w.done)-1,width:bwA+2,height:ih-(y(w.done)-T)+1,rx:5,fill:S('--surface-1')}));
+      g.appendChild(el('rect',{x:cx-bwA/2,y:y(w.done),width:bwA,height:ih-(y(w.done)-T),rx:4,fill:S('--series-1')}));
+    }
+    hov(g,`<b>week ${w.n} · ${dlab(w.mon)}–${dlab(w.sun)}</b><br>gepland ${w.km} km · lange duurloop ${nl(w.lr)} km<br>`
+      +(w.started?`gerealiseerd ${nl(w.done)} km${w.easyPct!==null?` · ${Math.round(w.easyPct)} % rustig`:''}`:'nog niet begonnen')
+      +`<br>${w.fase}`);
+    svg.appendChild(g);
+    const t=el('text',{class:'ax',x:cx,y:H-B+17,'text-anchor':'middle'});t.textContent='w'+w.n;svg.appendChild(t);
+    if(w.n===CUR.n){
+      const m=el('text',{class:'axb',x:cx,y:H-B+31,'text-anchor':'middle',fill:S('--series-1')});
+      m.textContent='nu';svg.appendChild(m);
+    }
+  });
+  // geplande lange duurloop als lijn
+  const pts=PLAN.map((w,i)=>[L+band*i+band/2,y(w.lr)]);
+  svg.appendChild(el('path',{d:'M'+pts.map(p=>p.join(' ')).join(' L '),fill:'none',
+    stroke:S('--band'),'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  pts.forEach((p,i)=>{
+    svg.appendChild(el('circle',{cx:p[0],cy:p[1],r:5.5,fill:S('--surface-1')}));
+    const c=el('circle',{cx:p[0],cy:p[1],r:3.5,fill:S('--band')});
+    hov(c,`<b>week ${PLAN[i].n}</b><br>lange duurloop ${nl(PLAN[i].lr)} km`);
+    svg.appendChild(c);
+  });
+  const lb=el('text',{class:'dl',x:pts[13][0],y:pts[13][1]-11,'text-anchor':'end'});
+  lb.textContent='21,1';svg.appendChild(lb);
+  // fasebalken
+  [[0,4,'Heropbouw'],[4,4,'Duurbasis'],[8,4,'Specifiek'],[12,2,'Taper']].forEach(([s,len,name])=>{
+    const x1=L+band*s+5, x2=L+band*(s+len)-5;
+    svg.appendChild(el('line',{x1,x2,y1:H-B+40,y2:H-B+40,stroke:S('--grid'),'stroke-width':2,'stroke-linecap':'round'}));
+    const t=el('text',{class:'axb',x:(x1+x2)/2,y:H-B+54,'text-anchor':'middle'});t.textContent=name;svg.appendChild(t);
+  });
+})();
+
+/* ══════════════ 3. weektabel ══════════════ */
+(function(){
+  const tb=document.getElementById('wkBody');
+  const per=w=>{const a=D(w.mon),b=D(w.sun);
+    return a.getMonth()===b.getMonth()? a.getDate()+'–'+b.getDate()+' '+MND[b.getMonth()]
+      : a.getDate()+' '+MND[a.getMonth()]+' – '+b.getDate()+' '+MND[b.getMonth()];};
+  const judge=(a,tgt)=>{
+    if(a.pace<tgt[0]-8) return ['bad','te hard'];
+    if(a.pace>tgt[1]+15) return ['warn','te traag'];
+    return ['ok','op tempo'];
+  };
+  PLAN.forEach(w=>{
+    const tr=document.createElement('tr');
+    tr.className='wk-row'+(w.n===CUR.n?' now':'');
+    const dlt=w.started? (w.done-w.planToDate):null;
+    const dltTxt=dlt===null?'<span class="muted">—</span>'
+      :`<span class="tag ${Math.abs(dlt)<=1.5?'ok':dlt<0?'bad':'warn'}">${dlt>=0?'+':''}${nl(dlt)}</span>`
+       +(w.closed?'':' <span class="muted">tot nu</span>');
+    tr.innerHTML=`<td>w${w.n}</td><td class="l">${per(w)}</td><td>${w.km}</td>
+      <td>${w.started?nl(w.done):'<span class="muted">—</span>'}</td>
+      <td>${dltTxt}</td>
+      <td>${nl(w.lr)}${w.started&&w.longest?' <span class="muted">/ '+nl(w.longest)+'</span>':''}</td>
+      <td>${w.easyPct===null?'<span class="muted">—</span>':
+        `<span class="tag ${w.easyPct>=68?'ok':'bad'}">${Math.round(w.easyPct)} %</span>`}</td>
+      <td class="l">${w.fase}</td>`;
+    tb.appendChild(tr);
+
+    const dt=document.createElement('tr');dt.className='det';
+    dt.style.display = (w.n===CUR.n) ? '' : 'none';   // huidige week staat standaard open
+    let inner='<table><thead><tr><th class="l">Dag</th><th class="l">Sessie</th><th>Gepland</th>'
+      +'<th>Doeltempo</th><th>Gelopen</th><th>Tempo</th><th class="l">Oordeel</th></tr></thead><tbody>';
+    w.ses.forEach(s=>{
+      const[d,km,lab,tgt,note,date,got]=s;
+      const tot=got.reduce((a,b)=>a+b.km,0);
+      const secs=got.reduce((a,b)=>a+b.s,0);
+      const p=tot>0?secs/tot:null;
+      let oord='<span class="muted">'+(s.due<TODAY?'niet gelopen':'staat gepland')+'</span>';
+      if(p){const[c,t]=judge({pace:p},tgt);
+        const vol=tot/km; const volTxt=vol<0.9?' · te kort':vol>1.15?' · te lang':'';
+        oord=`<span class="tag ${c}">${t}${volTxt}</span>`;}
+      const movedTxt=(s.moved&&got.length)?` <span class="muted">(verzet naar ${DAG[D(got[0].d).getDay()]} ${dlab(got[0].d)})</span>`:'';
+      const shift = s.due!==date
+        ? ` <span class="muted">&rarr; ${DAG[D(s.due).getDay()]} ${D(s.due).getDate()}/${D(s.due).getMonth()+1}</span>` : '';
+      inner+=`<tr><td class="l">${d} ${D(date).getDate()}/${D(date).getMonth()+1}${shift}</td>
+        <td class="l">${lab}${note?`<br><span class="muted">${note}</span>`:''}</td>
+        <td>${nl(km)} km</td><td>${mmss(tgt[0])}–${mmss(tgt[1])}</td>
+        <td>${tot?nl(tot)+' km':'—'}${movedTxt}</td><td>${p?mmss(p):'—'}</td>
+        <td class="l">${oord}</td></tr>`;
+    });
+    inner+='</tbody></table>';
+    dt.innerHTML=`<td colspan="8">${inner}</td>`;
+    tb.appendChild(dt);
+    tr.addEventListener('click',()=>{dt.style.display=dt.style.display==='none'?'':'none';});
+  });
+})();
+
+/* ══════════════ 4. intensiteit ══════════════
+   Eigen periodefilter, los van dat van het activiteitenblok: de tijdas schaalt mee met
+   de gekozen periode. Wordt aangeroepen ná buildFilters(), omdat PERIODS daar pas bestaat. */
+function drawIntensity(){
+  const svg=document.getElementById('c2'); svg.textContent='';
+  const W=980,H=298,L=48,R=152,T=24,B=44;
+  const iw=W-L-R, ih=H-T-B;
+  const p0=260,p1=430, y=p=>T+((p-p0)/(p1-p0))*ih;
+
+  const from=PERIODS.find(p=>p[0]===intState.per)[2];
+  const runs=ACT.filter(a=>a.t==='R'&&a.d>=from&&a.km>=3);
+  const startISO = (from==='2000-01-01') ? (runs.length?runs[0].d:'2026-08-17') : from;
+  const d0=D(addD(startISO,-6)), d1=D('2026-11-25');
+  const x=s=>L+((D(s)-d0)/(d1-d0))*iw;
+
+  const judge=(pace,tgt)=>{
+    if(pace<tgt[0]-8) return ['bad','te hard'];
+    if(pace>tgt[1]+15) return ['warn','te traag'];
+    return ['ok','op tempo'];
+  };
+  // banden: rustig 6:00–6:50, grijze zone 5:20–5:45 (vermijden), wedstrijdtempo 5:10–5:16
+  svg.appendChild(el('rect',{x:L,y:y(360),width:iw,height:y(410)-y(360),fill:S('--band'),opacity:.12}));
+  [360,410].forEach(p=>svg.appendChild(el('line',{x1:L,x2:L+iw,y1:y(p),y2:y(p),
+    stroke:S('--band'),'stroke-width':2,opacity:.5})));
+  svg.appendChild(el('rect',{x:L,y:y(GRIJS[0]),width:iw,height:y(GRIJS[1])-y(GRIJS[0]),
+    fill:S('--critical'),opacity:.10}));
+  svg.appendChild(el('rect',{x:L,y:y(WT[0]),width:iw,height:y(WT[1])-y(WT[0]),
+    fill:S('--good'),opacity:.22}));
+  svg.appendChild(el('rect',{x:L,y:y(IP[0]),width:iw,height:y(IP[1])-y(IP[0]),
+    fill:S('--good'),opacity:.13}));
+
+  const inBand=runs.filter(a=>a.pace>=360&&a.pace<=410).length;
+  const inGrey=runs.filter(a=>a.pace>=GRIJS[0]&&a.pace<=GRIJS[1]).length;
+  const ann=(yy,t,muted)=>{const e=el('text',{class:'ann',x:L+iw+10,y:yy});
+    if(muted) e.setAttribute('fill',S('--text-muted')); e.textContent=t; svg.appendChild(e);};
+  ann(y(385)-4,'rustige band');
+  ann(y(385)+11,'6:00–6:50 · '+inBand+'/'+runs.length+' lopen',1);
+  ann(y(305),'wedstrijdtempo');
+  ann(y(317),'5:10–5:16',1);
+  ann(y(338),'grijze zone');
+  ann(y(350),'5:20–5:45 · '+inGrey+' lopen',1);
+  ann(y(268),'scherptesessie');
+  ann(y(280),'4:33–4:42 · week 5, 7 en 9',1);
+  // grid
+  [270,285,300,315,330,345,360,375,390,405,420].forEach(p=>{
+    if(p<360||p>410) svg.appendChild(el('line',{class:'gl',x1:L,x2:L+iw,y1:y(p),y2:y(p)}));
+    const t=el('text',{class:'ax',x:L-8,y:y(p)+3.5,'text-anchor':'end'});t.textContent=mmss(p);svg.appendChild(t);
+  });
+  const hl=el('text',{class:'ax',x:L,y:T-8,'text-anchor':'start'});hl.textContent='min/km';svg.appendChild(hl);
+  // scheidslijn schemastart — alleen als die binnen het venster valt
+  const xs=x('2026-08-17');
+  if(xs>=L&&xs<=L+iw){
+    svg.appendChild(el('line',{x1:xs,x2:xs,y1:T-2,y2:T+ih,stroke:S('--baseline'),'stroke-width':1.5,'stroke-dasharray':'4 4'}));
+    const sl=el('text',{class:'ann',x:xs+6,y:T+9});sl.textContent='start schema';svg.appendChild(sl);
+  }
+  // punten
+  runs.forEach(a=>{
+    const s=a.matchedSession;                 // sequentiële koppeling uit matchWeek()
+    let col,txt;
+    if(s){                                    // beoordeel tegen de band van DIE sessie
+      const[c,t]=judge(a.pace,s[3]);
+      col = c==='ok'?S('--good'):c==='bad'?S('--critical'):S('--plan');
+      txt = `<b>${t}</b> — gepland ${s[2].toLowerCase()}, ${mmss(s[3][0])}–${mmss(s[3][1])}/km`
+          + (s.moved?' <span style="opacity:.7">(verzet, gepland stond '+dlab(s[5])+')</span>':'');
+    } else {                                  // geen geplande sessie (historie of extra loop)
+      col = a.pace<360?S('--critical'):a.pace<=410?S('--series-1'):S('--plan');
+      txt = a.pace>=GRIJS[0]&&a.pace<=GRIJS[1]?'grijze zone — komt in het schema niet voor'
+          : a.pace<360?'sneller dan 6:00':a.pace<=410?'rustig':'herstel';
+    }
+    const g=el('g',{});
+    g.appendChild(el('circle',{cx:x(a.d),cy:y(Math.min(a.pace,p1-4)),r:6.5,fill:S('--surface-1')}));
+    g.appendChild(el('circle',{cx:x(a.d),cy:y(Math.min(a.pace,p1-4)),r:5,fill:col}));
+    hov(g,`<b>${dlab(a.d)}</b><br>${nl(a.km)} km · ${mmss(a.pace)}/km<br>${txt}`);
+    svg.appendChild(g);
+  });
+  if(!runs.length){
+    const t=el('text',{class:'ann',x:L+iw/2,y:T+ih/2,'text-anchor':'middle'});
+    t.textContent='Geen lopen van 3 km of meer in deze periode.';svg.appendChild(t);
+  }
+  // maandas, meeschalend met het venster
+  const months=[];
+  let ym=new Date(d0.getFullYear(),d0.getMonth(),15);
+  while(ym<=d1){months.push(new Date(ym)); ym=new Date(ym.getFullYear(),ym.getMonth()+1,15);}
+  const stp = months.length>15?2:1;
+  months.forEach((m,i)=>{
+    if(i%stp) return;
+    const xx=L+((m-d0)/(d1-d0))*iw;
+    if(xx<L-4||xx>L+iw+4) return;
+    const t=el('text',{class:'ax',x:xx,y:H-B+18,'text-anchor':'middle'});
+    t.textContent=MND[m.getMonth()]+(m.getMonth()===0?" '"+String(m.getFullYear()).slice(2):'');
+    svg.appendChild(t);
+  });
+}
+
+/* ══════════════ 5. activiteiten met filters ══════════════ */
+const state={types:new Set(['R','P','F','O']), per:'schema'};
+const intState={per:'schema'};   /* eigen periodefilter voor het intensiteitsblok */
+const PERIODS=[['schema','Schemaperiode','2026-08-17'],['12m','12 maanden','2025-08-18'],
+               ['2026','2026','2026-01-01'],['alles','Alles','2000-01-01']];
+
+function mondayOf(s){const d=D(s);const off=(d.getDay()+6)%7;d.setDate(d.getDate()-off);return iso(d);}
+
+function buildFilters(){
+  const ft=document.getElementById('fType');
+  Object.entries(TYPES).forEach(([k,v])=>{
+    const n=ACT.filter(a=>grp(a.t)===k).length;
+    const b=document.createElement('button');
+    b.className='chip';b.setAttribute('aria-pressed','true');
+    b.innerHTML=`<i class="sw" style="background:var(${v.c})"></i>${v.lab}<span class="cnt">${n}</span>`;
+    b.onclick=()=>{state.types.has(k)?state.types.delete(k):state.types.add(k);
+      if(!state.types.size)state.types.add(k);
+      b.setAttribute('aria-pressed',state.types.has(k));render();};
+    ft.appendChild(b);
+  });
+  const fp=document.getElementById('fPer');
+  PERIODS.forEach(([k,lab])=>{
+    const b=document.createElement('button');
+    b.className='chip';b.textContent=lab;b.setAttribute('aria-pressed',state.per===k);
+    b.dataset.k=k;
+    b.onclick=()=>{state.per=k;[...fp.querySelectorAll('.chip')].forEach(c=>
+      c.setAttribute('aria-pressed',c.dataset.k===k));render();};
+    fp.appendChild(b);
+  });
+  // zelfde periodefilter voor het intensiteitsblok, met eigen state
+  const fi=document.getElementById('fPerInt');
+  PERIODS.forEach(([k,lab])=>{
+    const b=document.createElement('button');
+    b.className='chip';b.textContent=lab;b.setAttribute('aria-pressed',intState.per===k);
+    b.dataset.k=k;
+    b.onclick=()=>{intState.per=k;[...fi.querySelectorAll('.chip')].forEach(c=>
+      c.setAttribute('aria-pressed',c.dataset.k===k));drawIntensity();};
+    fi.appendChild(b);
+  });
+}
+
+function render(){
+  const from=PERIODS.find(p=>p[0]===state.per)[2];
+  const sel=ACT.filter(a=>a.d>=from&&state.types.has(grp(a.t)));
+  // ── legenda
+  document.getElementById('mixLegend').innerHTML=[...state.types]
+    .sort((a,b)=>'RPFO'.indexOf(a)-'RPFO'.indexOf(b))
+    .map(k=>`<span><i class="sw" style="background:var(${TYPES[k].c})"></i>${TYPES[k].lab}</span>`).join('');
+  // ── weekbuckets
+  const wks=new Map();
+  const start=mondayOf(from==='2000-01-01'?ACT[0].d:from);
+  for(let d=start; d<=mondayOf(TODAY); d=addD(d,7)) wks.set(d,{R:0,P:0,F:0,O:0});
+  sel.forEach(a=>{const m=mondayOf(a.d); if(!wks.has(m))wks.set(m,{R:0,P:0,F:0,O:0});
+    wks.get(m)[grp(a.t)]+= (a.t==='P'? a.es : a.s)/3600;});
+  const keys=[...wks.keys()].sort();
+  drawMix(keys.map(k=>[k,wks.get(k)]),sel.length);
+  // ── log: gegroepeerd per week, met weektotalen en een eindtotaal over het filter
+  const dur=a=>(a.t==='P'?a.es:a.s);
+  const agg=arr=>({n:arr.length,km:arr.reduce((x,a)=>x+a.km,0),
+    s:arr.reduce((x,a)=>x+dur(a),0),cal:arr.reduce((x,a)=>x+a.cal,0)});
+  const hm=t=>{let m=Math.round(t/60);const h=Math.floor(m/60);m-=h*60;
+    return h+':'+String(m).padStart(2,'0');};
+  const kcal=v=>v.toLocaleString('nl-NL');
+
+  const groups=new Map();
+  sel.forEach(a=>{const m=mondayOf(a.d); if(!groups.has(m))groups.set(m,[]); groups.get(m).push(a);});
+  const gkeys=[...groups.keys()].sort().reverse();
+  const G=agg(sel);
+  const perLabel=PERIODS.find(p=>p[0]===state.per)[1];
+  const OPEN=3;                                    // weken die standaard openstaan
+
+  let h='<table><thead><tr><th class="l">Datum</th><th class="l">Type</th><th>Afstand</th>'
+    +'<th>Duur<span class="muted"> u:mm</span></th><th>Tempo</th><th>kcal</th><th class="l">Oordeel</th></tr></thead><tbody>';
+  if(!sel.length){
+    h+='<tr><td colspan="7" class="muted">Geen activiteiten in deze selectie.</td></tr>';
+  }
+  gkeys.forEach((mon,gi)=>{
+    const list=groups.get(mon).slice().sort((x,y)=>x.d<y.d?1:x.d>y.d?-1:0);
+    const w=agg(list), hid=gi>=OPEN?' hid':'';
+    h+=`<tr class="wkhead${hid}"><td class="l" colspan="2">week van ${dlab(mon)}</td>`
+      +`<td>${w.km>=0.05?nl(w.km)+' km':'—'}</td><td>${hm(w.s)}</td><td>—</td>`
+      +`<td>${kcal(w.cal)}</td><td class="l">${w.n} act.</td></tr>`;
+    list.forEach(a=>{
+      const g=grp(a.t);
+      let oor='<span class="muted">—</span>';
+      if(a.pace&&a.km>=3) oor=a.pace<360?'<span class="tag bad">te hard</span>'
+        :a.pace<=410?'<span class="tag ok">rustig</span>':'<span class="tag">herstel</span>';
+      h+=`<tr class="${hid.trim()}"><td class="l">${DAG[a.wd]} ${dlab(a.d)} ${a.d.slice(0,4)}</td>
+        <td class="l"><i class="sw" style="background:var(${TYPES[g].c})"></i> ${TYPES[g].lab}</td>
+        <td>${a.km>=0.05?nl(a.km)+' km':'<span class="muted" title="Voetbal wordt zonder GPS opgenomen — Strava kent deze activiteit geen afstand toe">—</span>'}</td>
+        <td>${hm(dur(a))}</td><td>${a.pace?mmss(a.pace):'—'}</td>
+        <td class="kcal">${kcal(a.cal)}</td><td class="l">${oor}</td></tr>`;
+    });
+  });
+  h+='</tbody>';
+  if(sel.length) h+=`<tfoot><tr><td class="l" colspan="2">Totaal · ${perLabel}</td>`
+    +`<td>${G.km>=0.05?nl(G.km)+' km':'—'}</td><td>${hm(G.s)}</td><td>—</td>`
+    +`<td>${kcal(G.cal)}</td><td class="l">${G.n} act.</td></tr></tfoot>`;
+  document.getElementById('logTable').innerHTML=h+'</table>';
+
+  const wrap=document.getElementById('logWrap'), btn=document.getElementById('logMore');
+  wrap.classList.remove('open');
+  const hiddenWeeks=Math.max(0,gkeys.length-OPEN);
+  btn.hidden=!hiddenWeeks;
+  btn.textContent=`Toon ${hiddenWeeks} oudere weken`;
+  btn.onclick=()=>{
+    const open=wrap.classList.toggle('open');
+    btn.textContent=open?'Toon minder':`Toon ${hiddenWeeks} oudere weken`;
+  };
+}
+
+function drawMix(data,count){
+  const svg=document.getElementById('c3');svg.textContent='';
+  const W=980,H=254,L=40,R=14,T=22,B=40;
+  if(!count){
+    const t=el('text',{class:'ann',x:W/2,y:H/2,'text-anchor':'middle'});
+    t.textContent='Nog geen activiteiten in deze periode — de eerste training van het schema staat op woensdag 19 augustus.';
+    svg.appendChild(t);return;
+  }
+  const iw=W-L-R, ih=H-T-B, n=Math.max(data.length,1), band=iw/n, bw=Math.min(16,Math.max(2,band-3));
+  const max=Math.max(1,...data.map(([,v])=>v.R+v.P+v.F+v.O));
+  const step=max>4?2:max>2?1:0.5;
+  const top=Math.ceil(max/step)*step;
+  const y=v=>T+ih-(v/top)*ih;
+  for(let v=0;v<=top+1e-9;v+=step){
+    svg.appendChild(el('line',{class:'gl',x1:L,x2:W-R,y1:y(v),y2:y(v)}));
+    const t=el('text',{class:'ax',x:L-8,y:y(v)+3.5,'text-anchor':'end'});t.textContent=nl(v);svg.appendChild(t);
+  }
+  const ul=el('text',{class:'ax',x:L,y:T-8,'text-anchor':'start'});ul.textContent='uur';svg.appendChild(ul);
+  const order=['R','P','F','O'].filter(k=>state.types.has(k));
+  data.forEach(([mon,v],i)=>{
+    const cx=L+band*i+band/2;
+    let acc=0;
+    const tot=order.reduce((s,k)=>s+v[k],0);
+    const g=el('g',{});
+    order.forEach(k=>{
+      if(v[k]<=0)return;
+      const y0=y(acc), y1=y(acc+v[k]);
+      g.appendChild(el('rect',{x:cx-bw/2,y:y1,width:bw,height:Math.max(1.5,y0-y1-2),rx:3,fill:S(TYPES[k].c)}));
+      acc+=v[k];
+    });
+    if(tot===0) g.appendChild(el('rect',{x:cx-bw/2,y:T+ih-2,width:bw,height:2,rx:1,fill:S('--grid')}));
+    hov(g,`<b>week van ${dlab(mon)}</b><br>`+(tot===0?'niets':
+      order.filter(k=>v[k]>0).map(k=>`${TYPES[k].lab}: ${nl(v[k])} u`).join('<br>')));
+    svg.appendChild(g);
+  });
+  let last='';
+  data.forEach(([mon],i)=>{
+    const m=mon.slice(0,7);
+    if(m===last)return;
+    last=m;
+    const cx=L+band*i+band/2;
+    const t=el('text',{class:'ax',x:cx,y:H-B+17,'text-anchor':'middle'});
+    t.textContent=MND[+mon.slice(5,7)-1]+(mon.slice(5,7)==='01'?" '"+mon.slice(2,4):'');
+    svg.appendChild(t);
+  });
+}
+buildFilters();render();drawIntensity();
+
+/* ══════════════ 6. records en wedstrijdhistorie ══════════════ */
+const RACES=DATA.races;
+(function(){
+  [
+   ['Halve marathon','1:51:27','PR','7 apr 2025 · 5:17/km'],
+   ['Ell 2025','1:51:52','','23 nov 2025 · negatieve split'],
+   ['10 kilometer','49:07','PR','31 dec 2025 · 4:55/km'],
+   ['5 kilometer','23:05','PR','7 mei 2025 · 4:37/km'],
+   ['HFmax','198','','rusthartslag 54 · reserve 144 · herziening 5'],
+   ['VO₂max','49','','Garmin · VDOT uit de HM: 39,8'],
+  ].forEach(([l,v,pr,n])=>{
+    const d=document.createElement('div');d.className='tile';
+    d.innerHTML=`<div class="lab">${l}</div><div class="val">${v}${pr?`<span class="pr">${pr}</span>`:''}</div>`
+      +`<div class="note">${n}</div>`;
+    document.getElementById('prTiles').appendChild(d);
+  });
+  let h='<table><thead><tr><th class="l">Datum</th><th class="l">Afstand</th><th>Tijd</th>'
+    +'<th>Tempo</th><th>Gem. HR</th><th class="l">Bijzonderheid</th></tr></thead><tbody>';
+  RACES.slice().reverse().forEach(([d,a,t,p,hr,b])=>{
+    h+=`<tr><td class="l">${dlab(d)} ${d.slice(0,4)}</td><td class="l">${a}</td><td>${t}</td>`
+      +`<td>${p}</td><td>${hr}</td><td class="l">${b?`<span class="tag${b.includes('PR')?' ok':''}">${b}</span>`:'<span class="muted">—</span>'}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('prTable').innerHTML=h;
+})();
+
+/* ══════════════ 7. nulmeting: 12 maanden hardloopvolume ══════════════ */
+(function(){
+  const svg=document.getElementById('c4'),W=980,H=252,L=40,R=14,T=22,B=40;
+  const iw=W-L-R, ih=H-T-B;
+  const wks=[];
+  for(let d=mondayOf('2025-08-18'); d<=mondayOf('2026-08-17'); d=addD(d,7)) wks.push(d);
+  const vol=wks.map(m=>ACT.filter(a=>a.t==='R'&&a.d>=m&&a.d<=addD(m,6)).reduce((s,a)=>s+a.km,0));
+  const n=wks.length, band=iw/n, bw=Math.min(14,band-3), max=40, y=v=>T+ih-(v/max)*ih;
+  [0,10,20,30,40].forEach(v=>{
+    svg.appendChild(el('line',{class:'gl',x1:L,x2:W-R,y1:y(v),y2:y(v)}));
+    const t=el('text',{class:'ax',x:L-8,y:y(v)+3.5,'text-anchor':'end'});t.textContent=v;svg.appendChild(t);
+  });
+  const kl=el('text',{class:'ax',x:L,y:T-8,'text-anchor':'start'});kl.textContent='km';svg.appendChild(kl);
+  wks.forEach((m,i)=>{
+    const cx=L+band*i+band/2, v=vol[i];
+    const r=v>0?el('rect',{x:cx-bw/2,y:y(v),width:bw,height:ih-(y(v)-T),rx:3.5,fill:S('--series-1')})
+               :el('rect',{x:cx-bw/2,y:T+ih-2,width:bw,height:2,rx:1,fill:S('--grid')});
+    hov(r,`<b>week van ${dlab(m)}</b><br>${nl(v)} km`);svg.appendChild(r);
+  });
+  let last='';
+  wks.forEach((m,i)=>{const mm=m.slice(0,7);
+    if(mm!==last){last=mm;const cx=L+band*i+band/2;
+      const t=el('text',{class:'ax',x:cx,y:H-B+17,'text-anchor':'middle'});
+      t.textContent=MND[+m.slice(5,7)-1]+(m.slice(5,7)==='01'?" '26":'');svg.appendChild(t);}});
+  // droogte-annotatie
+  const i1=wks.indexOf(mondayOf('2026-06-22')), i2=n-1;
+  if(i1>0){
+    const x1=L+band*i1, x2=L+band*(i2+1);
+    svg.appendChild(el('line',{x1,x2,y1:T+6,y2:T+6,stroke:S('--band'),'stroke-width':2,'stroke-linecap':'round'}));
+    const a=el('text',{class:'ann',x:(x1+x2)/2,y:T+1,'text-anchor':'middle'});
+    const som=vol.slice(i1).reduce((s,v)=>s+v,0);
+    a.textContent=nl(som)+' km in de laatste '+(i2-i1+1)+' weken';svg.appendChild(a);
+  }
+})();
+
+/* ══════════════ info-tooltips ══════════════ */
+document.querySelectorAll('[data-tip]').forEach(b=>{
+  hov(b,b.dataset.tip);
+  b.style.cursor='help';
+  b.setAttribute('aria-label','Toelichting');
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();});
+});
+</script>
+<script>
+(async()=>{
+  try{
+    const r=await fetch('data.json',{cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    window.DATA=await r.json();
+  }catch(e){
+    document.body.insertAdjacentHTML('afterbegin','<div style="margin:16px;padding:12px 14px;border:1px solid #c0392b;border-radius:10px;color:#c0392b;font:14px sans-serif">Dashboarddata kon niet worden geladen (data.json): '+String(e.message).replace(/</g,'&lt;')+'</div>');
+    return;
+  }
+  const s=document.createElement('script');
+  s.textContent=document.getElementById('app').textContent;
+  document.body.appendChild(s);
+})();
+</script>
+
+
+</body></html>
