@@ -91,9 +91,10 @@
     ["2026-10-14","R",18015,6631,6652,1445],
     ["2026-10-16","P",919.3,1354,5143,524],
     ["2026-10-16","R",8316.1,2923,2934,684],
-    ["2026-10-22","R",7100.8,2621,2632,569]
+    ["2026-10-22","R",7100.8,2621,2632,569],
+    ["2026-10-28","R",21415.2,7201,7213,1720]
   ],
-  "sync": {"through":"2026-10-22T21:41:18"},
+  "sync": {"through":"2026-10-28T19:53:27"},
   "plan": [
     {"n":1,"mon":"2026-08-17","km":19,"lr":10,"rp":0,"fase":"Heropbouw","ses":[["wo",10,"Lange duurloop",[365,400],"begrenzen op 6:05 — zet een tempo-alarm op de Venu 2"],["vr",5,"Rustige duurloop",[380,410],"6:20–6:50"],["za",4,"Rustig + versnellingen",[370,405],"6:00–6:50 · 6× 100 m versnelling"]]},
     {"n":2,"mon":"2026-08-24","km":21,"lr":11,"rp":0,"fase":"Heropbouw","ses":[["wo",11,"Lange duurloop",[365,400],"lang rustig — nog schoon, geen blokken"],["vr",6,"Rustige duurloop",[380,410],""],["za",4,"Rustig + versnellingen",[370,405],"6× 100 m versnelling"]]},
